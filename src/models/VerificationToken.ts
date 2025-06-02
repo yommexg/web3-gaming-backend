@@ -4,6 +4,7 @@ export interface IVerificationToken extends Document {
   email: string;
   token: string;
   expiresAt: Date;
+  isVerified: boolean;
 }
 
 const VerificationTokenSchema = new Schema<IVerificationToken>({
@@ -14,13 +15,16 @@ const VerificationTokenSchema = new Schema<IVerificationToken>({
 
   token: {
     type: String,
-    required: true,
   },
 
   expiresAt: {
     type: Date,
-    required: true,
     default: () => new Date(Date.now() + 3 * 60 * 1000),
+  },
+
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -44,10 +44,9 @@ export const handleVerifyEmailToken = async (
       return;
     }
 
-    const newUser = new User({ email: record.email });
-    await newUser.save();
-
-    await VerificationToken.deleteOne({ _id: record._id });
+    record.token = "";
+    record.isVerified = true;
+    await record.save();
 
     res
       .status(200)
