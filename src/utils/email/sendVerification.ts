@@ -1,12 +1,8 @@
 import { FRONTEND_URL } from "../../config/env";
 import transporter from "./transporter";
 
-export const sendVerificationEmail = async (
-  email: string,
-  name: string,
-  token: string
-) => {
-  if (!email || !name || !token) {
+export const sendVerificationEmail = async (email: string, token: string) => {
+  if (!email || !token) {
     throw new Error("Email, name, and token are required");
   }
 
@@ -15,65 +11,87 @@ export const sendVerificationEmail = async (
   await transporter.sendMail({
     from: '"Crypto Oasis" <no-reply@lumina.com>',
     to: email,
-    subject: "Verify your Lumina account",
+    subject: "Verify your Crypto Oasis account",
     html: `
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              color: #333;
-              background-color: #f4f4f9;
-              padding: 20px;
-            }
-            .container {
-              max-width: 600px;
-              margin: 0 auto;
-              background-color: #fff;
-              border-radius: 8px;
-              padding: 30px;
-              box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
-            .logo {
-              display: block;
-              margin: 0 auto 20px;
-            }
-            h1 {
-              color: #6C63FF;
-              text-align: center;
-            }
-            p {
-              font-size: 16px;
-              line-height: 1.5;
-            }
-            a {
-              color: #6C63FF;
-              text-decoration: none;
-              font-weight: bold;
-            }
-            .footer {
-              text-align: center;
-              margin-top: 30px;
-              font-size: 14px;
-              color: #777;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <!-- Reference logo using 'cid' for embedded images -->
-            <img src="cid:icon" alt="Lumina Logo" class="logo" width="150" />
-            <h1>Welcome to Lumina, ${name}!</h1>
-            <p>Thank you for registering with Lumina! Please click the link below to verify your email address:</p>
-            <p><a href="${url}">${url}</a></p>
-            <p>If you did not sign up for a Lumina account, please ignore this email.</p>
-            <div class="footer">
-              <p>— The Lumina Team</p>
-            </div>
+    <html>
+      <head>
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #30B943;
+          }
+          .logo {
+            display: block;
+            margin: 0 auto 20px;
+          }
+          h1 {
+            color: #CCE919;
+            text-align: center;
+          }
+          p {
+            font-size: 16px;
+            line-height: 1.6;
+          }
+          .verify-button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 20px;
+            background-color: #30B943;
+            color: #000;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+          }
+          .footer {
+            font-size: 13px;
+            color: #777;
+            margin-top: 40px;
+            text-align: center;
+          }
+          .privacy {
+            font-size: 12px;
+            margin-top: 15px;
+            color: #666;
+            line-height: 1.4;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <img src="cid:icon" alt="Crypto Oasis Logo" class="logo" width="120" />
+          <h1>Verify Your Email</h1>
+          <p>Welcome to <strong>Crypto Oasis</strong> — the multigaming platform where NFT communities unite, compete, and have fun!</p>
+          <p>To complete your registration, please verify your email address by clicking the button below:</p>
+          <p style="text-align: center;">
+            <a class="verify-button" href="${url}">Verify Email</a>
+          </p>
+          <p>If you did not sign up for a Crypto Oasis account, please ignore this message.</p>
+  
+          <div class="privacy">
+            <p><strong>Privacy Notice:</strong> Your data is handled securely and in accordance with applicable data protection laws, including the GDPR. As the data controller, Crypto Oasis ensures your privacy is protected when using our platform. For more information, please review our Privacy Policy.</p>
           </div>
-        </body>
-      </html>
-    `,
+  
+          <div class="footer">
+            — The Crypto Oasis Team<br />
+            &copy; ${new Date().getFullYear()} Crypto Oasis
+          </div>
+        </div>
+      </body>
+    </html>
+  `,
+
     attachments: [
       {
         filename: "icon.png",
