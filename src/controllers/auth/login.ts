@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 
-import User from "../models/User";
+import User from "../../models/User";
 
 export const handleLoginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;

@@ -1,16 +1,19 @@
 import crypto from "crypto";
+import bcrypt from "bcryptjs";
 import VerificationToken from "../models/VerificationToken";
 
 export const generateVerificationToken = async (email: string) => {
-  const token = crypto.randomBytes(32).toString("hex");
+  const rawToken = crypto.randomBytes(32).toString("hex");
 
-  await VerificationToken.findOneAndDelete({ email }); // Invalidate old token
+  const hashedToken = await bcrypt.hash(rawToken, 10);
+
+  await VerificationToken.findOneAndDelete({ email });
 
   await VerificationToken.create({
     email,
-    token,
-    expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+    token: hashedToken,
+    expiresAt: new Date(Date.now() + 3 * 60 * 1000),
   });
 
-  return token;
+  return rawToken;
 };

@@ -77,6 +77,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
           <p style="text-align: center;">
             <a class="verify-button" href="${url}">Verify Email</a>
           </p>
+          <p><strong>Note:</strong> This verification link will expire in <strong>3 minutes</strong> for your security.</p>
           <p>If you did not sign up for a Crypto Oasis account, please ignore this message.</p>
   
           <div class="privacy">

@@ -10,9 +10,6 @@ const VerificationTokenSchema = new Schema<IVerificationToken>({
   email: {
     type: String,
     required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
   },
 
   token: {
@@ -23,7 +20,7 @@ const VerificationTokenSchema = new Schema<IVerificationToken>({
   expiresAt: {
     type: Date,
     required: true,
-    default: () => new Date(Date.now() + 3600000),
+    default: () => new Date(Date.now() + 3 * 60 * 1000),
   },
 });
 

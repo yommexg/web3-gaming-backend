@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { isEmailValid } from "../utils/regex";
-import User from "../models/User";
-import { generateVerificationToken } from "../utils/generateToken";
-import { sendVerificationEmail } from "../utils/email/sendVerification";
+import { isEmailValid } from "../../utils/regex";
+import User from "../../models/User";
+import { generateVerificationToken } from "../../utils/generateToken";
+import { sendVerificationEmail } from "../../utils/email/sendVerification";
 
 export const handleSendVerificationToken = async (
   req: Request,
@@ -35,6 +35,7 @@ export const handleSendVerificationToken = async (
 
     // Generate new token
     const token = await generateVerificationToken(email);
+    console.log(token);
 
     await sendVerificationEmail(email, token);
 
