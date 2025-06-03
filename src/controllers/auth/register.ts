@@ -48,6 +48,16 @@ export const handleRegisterUser = async (
       return;
     }
 
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    if (record.updatedAt < fiveMinutesAgo) {
+      await VerificationToken.deleteOne({ email });
+      res.status(403).json({
+        success: false,
+        message: "Verification expired. Please verify again.",
+      });
+      return;
+    }
+
     // 3. Create the user
     const hashedPassword = await bcrypt.hash(password, 10);
 

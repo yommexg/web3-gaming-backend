@@ -47,6 +47,16 @@ export const handleResetPassword = async (
       return;
     }
 
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    if (otpRecord.updatedAt < fiveMinutesAgo) {
+      await VerificationOTP.deleteOne({ email });
+      res.status(403).json({
+        success: false,
+        message: "Verification expired. Please verify again.",
+      });
+      return;
+    }
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await User.findOneAndUpdate({ email }, { password: hashedPassword });
