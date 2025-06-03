@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import User from "../../models/User";
 import VerificationToken from "../../models/VerificationToken";
 import { isEmailValid, isPasswordValid } from "../../utils/regex";
+import { sendWelcomeEmail } from "../../utils/email/sendWelcome";
+import { capitalizeFirstLetter } from "../../utils/capitalizeLetter";
 
 export const handleRegisterUser = async (
   req: Request,
@@ -13,9 +15,9 @@ export const handleRegisterUser = async (
     return;
   }
 
-  const { email, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!email || !password) {
+  if (!username || !email || !password) {
     res.status(400).json({ success: false, message: "Incomplete Details" });
     return;
   }
@@ -35,6 +37,15 @@ export const handleRegisterUser = async (
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       res.status(409).json({ success: false, message: "User already exists" });
+      return;
+    }
+
+    const existingUserName = await User.findOne({
+      username: username.toLowerCase(),
+    });
+
+    if (existingUserName) {
+      res.status(409).json({ success: false, message: "Username Taken" });
       return;
     }
 
@@ -63,10 +74,13 @@ export const handleRegisterUser = async (
 
     await User.create({
       email,
+      username: username.toLowerCase(),
       password: hashedPassword,
     });
 
     await VerificationToken.deleteOne({ email });
+
+    await sendWelcomeEmail(email, capitalizeFirstLetter(username));
 
     res
       .status(201)

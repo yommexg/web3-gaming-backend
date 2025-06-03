@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import User from "../../models/User";
 import VerificationOTP from "../../models/VerificationOTP";
 import { isEmailValid, isPasswordValid } from "../../utils/regex";
+import { sendPasswordResetSuccessEmail } from "../../utils/email/sendPasswordResetSuccess";
+import { capitalizeFirstLetter } from "../../utils/capitalizeLetter";
 
 export const handleResetPassword = async (
   req: Request,
@@ -62,6 +64,11 @@ export const handleResetPassword = async (
     await User.findOneAndUpdate({ email }, { password: hashedPassword });
 
     await VerificationOTP.deleteOne({ email });
+
+    await sendPasswordResetSuccessEmail(
+      user.email,
+      capitalizeFirstLetter(user.username)
+    );
 
     res.status(200).json({ success: true, message: "Password has been reset" });
   } catch (err) {
