@@ -19,7 +19,7 @@ const VerificationTokenSchema = new Schema<IVerificationToken>({
 
   expiresAt: {
     type: Date,
-    default: () => new Date(Date.now() + 3 * 60 * 1000),
+    default: () => new Date(Date.now() + 5 * 60 * 1000),
   },
 
   isVerified: {

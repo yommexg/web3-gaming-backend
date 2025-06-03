@@ -12,7 +12,7 @@ export const generateVerificationToken = async (email: string) => {
   await VerificationToken.create({
     email,
     token: hashedToken,
-    expiresAt: new Date(Date.now() + 3 * 60 * 1000),
+    expiresAt: new Date(Date.now() + 5 * 60 * 1000),
   });
 
   return rawToken;

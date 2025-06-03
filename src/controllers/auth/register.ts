@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User from "../../models/User";
 import VerificationToken from "../../models/VerificationToken";
+import { isEmailValid, isPasswordValid } from "../../utils/regex";
 
 export const handleRegisterUser = async (
   req: Request,
@@ -16,6 +17,16 @@ export const handleRegisterUser = async (
 
   if (!email || !password) {
     res.status(400).json({ success: false, message: "Incomplete Details" });
+    return;
+  }
+
+  if (!isEmailValid(email)) {
+    res.status(400).json({ success: false, message: "Invalid Email" });
+    return;
+  }
+
+  if (!isPasswordValid(password)) {
+    res.status(400).json({ success: false, message: "Weak Password" });
     return;
   }
 

@@ -17,11 +17,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(logEvent);
 
-app.get("/", (_req, res) => {
+app.get("/api/v2", (_req, res) => {
   res.send("Welcome to Pocker APIs' Collection");
 });
 
-app.use("/api/auth", authRouter);
+app.use("/api/v2/auth", authRouter);
 
 app.use(errorEvent);
 
