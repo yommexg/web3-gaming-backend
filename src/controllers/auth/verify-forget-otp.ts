@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import VerificationOTP from "../../models/VerificationOTP";
+import VerificationOTP from "../../models/ForgetVerificationOTP";
 import bcrypt from "bcryptjs";
 
 export const handleVerifyForgetOTP = async (

@@ -6,6 +6,7 @@ import { PORT } from "./config/env";
 import connectDB from "./config/dbConnect";
 import authRouter from "./routes/auth";
 import { errorEvent, logEvent } from "./middlewares/events";
+import { captureRequestMetadata } from "./middlewares/requestMetadata";
 
 const app = express();
 
@@ -14,6 +15,8 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(captureRequestMetadata);
 
 app.use(logEvent);
 

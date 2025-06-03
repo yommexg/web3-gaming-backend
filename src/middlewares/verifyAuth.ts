@@ -14,7 +14,7 @@ const verifyAuthToken = async (
       ? authHeader.split(" ")[1]
       : null;
 
-  if (token == null) {
+  if (!token) {
     res
       .status(401)
       .json({ success: false, message: "Authentictaion Token Required" });

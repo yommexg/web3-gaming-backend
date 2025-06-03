@@ -5,6 +5,10 @@ import { handleRegisterUser } from "../controllers/auth/register";
 import { handleRequestPasswordResetOTP } from "../controllers/auth/request-forget-otp";
 import { handleVerifyForgetOTP } from "../controllers/auth/verify-forget-otp";
 import { handleResetPassword } from "../controllers/auth/reset-password";
+import {
+  handleLoginUser,
+  handleVerifyNewDeviceAndLogin,
+} from "../controllers/auth/login";
 
 const authRouter = express.Router();
 
@@ -17,5 +21,9 @@ authRouter.post("/register", handleRegisterUser);
 authRouter.post("/request-forget-otp", handleRequestPasswordResetOTP);
 authRouter.post("/verify-forget-otp", handleVerifyForgetOTP);
 authRouter.post("/reset-password", handleResetPassword);
+
+//Login
+authRouter.post("/login", handleLoginUser);
+authRouter.post("/verify-and-login", handleVerifyNewDeviceAndLogin);
 
 export default authRouter;

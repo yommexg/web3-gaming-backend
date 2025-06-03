@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../../models/User";
-import VerificationOTP from "../../models/VerificationOTP";
+import VerificationOTP from "../../models/ForgetVerificationOTP";
 import { isEmailValid, isPasswordValid } from "../../utils/regex";
 import { sendPasswordResetSuccessEmail } from "../../utils/email/sendPasswordResetSuccess";
 import { capitalizeFirstLetter } from "../../utils/capitalizeLetter";

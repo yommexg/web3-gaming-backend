@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-interface IVerificationOTP extends Document {
+interface IForgetVerificationOTP extends Document {
   email: string;
   otp: string;
   expiresAt: Date;
@@ -9,7 +9,7 @@ interface IVerificationOTP extends Document {
   updatedAt: Date;
 }
 
-const verificationOTPSchema = new Schema<IVerificationOTP>(
+const forgetverificationOTPSchema = new Schema<IForgetVerificationOTP>(
   {
     email: {
       type: String,
@@ -31,7 +31,7 @@ const verificationOTPSchema = new Schema<IVerificationOTP>(
   { timestamps: true }
 );
 
-export default mongoose.model<IVerificationOTP>(
-  "VerificationOTP",
-  verificationOTPSchema
+export default mongoose.model<IForgetVerificationOTP>(
+  "ForgetVerificationOTP",
+  forgetverificationOTPSchema
 );

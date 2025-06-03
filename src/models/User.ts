@@ -6,6 +6,8 @@ export interface IUser extends Document {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  failedLoginAttempts?: number;
+  lockUntil?: Date | null;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -28,6 +30,16 @@ const UserSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+    },
+
+    failedLoginAttempts: {
+      type: Number,
+      default: 0,
+    },
+
+    lockUntil: {
+      type: Date,
+      default: null,
     },
   },
   {

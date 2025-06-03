@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import VerificationOTP from "../models/VerificationOTP";
+import VerificationOTP from "../models/ForgetVerificationOTP";
 
 export const generateOTPToken = async (email: string): Promise<string> => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP

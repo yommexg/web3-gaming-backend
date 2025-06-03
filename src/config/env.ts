@@ -8,3 +8,4 @@ export const EMAIL_PASS = process.env.EMAIL_PASS;
 export const FRONTEND_URL =
   process.env.PRO_FRONTEND_URL || "http://localhost:5173";
 export const DATABASE_URI = process.env.DATABASE_URI!;
+export const JWT_SECRET = process.env.JWT_SECRET!;
