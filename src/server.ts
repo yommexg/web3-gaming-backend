@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 import { PORT } from "./config/env";
 import connectDB from "./config/dbConnect";
@@ -15,6 +16,8 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(cookieParser());
 
 app.use(captureRequestMetadata);
 

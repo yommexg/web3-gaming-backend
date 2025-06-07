@@ -1,6 +1,9 @@
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+
 import VerificationToken from "../models/VerificationToken";
+import { JWT_SECRET } from "../config/env";
 
 export const generateVerificationToken = async (email: string) => {
   const rawToken = crypto.randomBytes(32).toString("hex");
@@ -16,4 +19,16 @@ export const generateVerificationToken = async (email: string) => {
   });
 
   return rawToken;
+};
+
+export const generateAccessToken = (userId: string) => {
+  return jwt.sign({ userId }, JWT_SECRET, {
+    expiresIn: "1m",
+  });
+};
+
+export const generateRefreshToken = (userId: string) => {
+  return jwt.sign({ userId }, JWT_SECRET, {
+    expiresIn: "3m",
+  });
 };

@@ -1,12 +1,15 @@
-import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
+
 import User from "../../models/User";
 import LoginLog from "../../models/LoginLog";
 import { sendNewDeviceNotification } from "../../utils/email/sendNewDeviceNotification";
-import { JWT_SECRET } from "../../config/env";
 import LoginVerificationOTP from "../../models/LoginVerificationOTP";
 import { sendNewDeviceOTP } from "../../utils/email/sendNewDeviceOTP";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../../utils/generateToken";
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_TIME_MINUTES = 15;
@@ -104,19 +107,20 @@ export const handleLoginUser = async (
       return;
     }
 
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      {
-        expiresIn: "1d",
-        algorithm: "HS256",
-      }
-    );
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    });
 
     res.status(200).json({
       success: true,
       message: "Login successful",
-      token,
+      token: accessToken,
     });
   } catch (error) {
     console.error(error);
@@ -171,20 +175,23 @@ export const handleVerifyNewDeviceAndLogin = async (
     // Log device
     await LoginLog.create({ user: user._id, ip, userAgent });
 
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      {
-        expiresIn: "1d",
-      }
-    );
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
 
     await sendNewDeviceNotification(user.email, ip, userAgent);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      // secure: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    });
 
     res.status(200).json({
       success: true,
       message: "Login successful",
-      token,
+      token: accessToken,
     });
   } catch (error) {
     console.error(error);
