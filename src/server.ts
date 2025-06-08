@@ -2,9 +2,11 @@ import express from "express";
 import path from "path";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import { PORT } from "./config/env";
 import connectDB from "./config/dbConnect";
+import corsOptions from "./config/corsOption";
 import authRouter from "./routes/auth";
 import { errorEvent, logEvent } from "./middlewares/events";
 import { captureRequestMetadata } from "./middlewares/requestMetadata";
@@ -14,6 +16,8 @@ import userRouter from "./routes/user";
 const app = express();
 
 connectDB();
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
