@@ -8,6 +8,8 @@ import connectDB from "./config/dbConnect";
 import authRouter from "./routes/auth";
 import { errorEvent, logEvent } from "./middlewares/events";
 import { captureRequestMetadata } from "./middlewares/requestMetadata";
+import verifyAuthToken from "./middlewares/verifyAuth";
+import userRouter from "./routes/user";
 
 const app = express();
 
@@ -28,6 +30,9 @@ app.get("/api/v2", (_req, res) => {
 });
 
 app.use("/api/v2/auth", authRouter);
+
+app.use(verifyAuthToken);
+app.use("/api/v2/user", userRouter);
 
 app.use(errorEvent);
 

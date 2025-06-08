@@ -50,7 +50,11 @@ export const handleVerifyEmailToken = async (
 
     res
       .status(200)
-      .json({ success: true, message: "Email verified successfully" });
+      .json({
+        success: true,
+        message: "Email verified successfully",
+        data: record.email,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server error" });

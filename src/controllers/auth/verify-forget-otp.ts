@@ -50,7 +50,11 @@ export const handleVerifyForgetOTP = async (
 
     res
       .status(200)
-      .json({ success: true, message: "OTP verified successfully" });
+      .json({
+        success: true,
+        message: "OTP verified successfully",
+        data: email,
+      });
   } catch (error) {
     console.error(error);
     res
