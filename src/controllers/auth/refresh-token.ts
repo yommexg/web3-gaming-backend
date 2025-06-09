@@ -17,12 +17,8 @@ export const handleRefreshToken = async (
 ): Promise<void> => {
   const token = req.cookies?.refreshToken;
 
-  console.log("Refresh token endpoint hit");
-
   if (!token) {
-    res
-      .status(401)
-      .json({ success: false, message: "No refresh token provided" });
+    res.status(401).json({ success: false, message: "Unauthorized" });
     return;
   }
 
@@ -30,17 +26,13 @@ export const handleRefreshToken = async (
     const decoded = jwt.verify(token, JWT_SECRET) as MyJwtPayload;
 
     if (!decoded?.userId) {
-      res
-        .status(403)
-        .json({ success: false, message: "Invalid token payload" });
+      res.status(403).json({ success: false, message: "Invalid Token" });
       return;
     }
 
     const user = await User.findById(decoded.userId);
     if (!user || !user.refreshTokens.includes(token)) {
-      res
-        .status(403)
-        .json({ success: false, message: "Invalid or reused refresh token" });
+      res.status(403).json({ success: false, message: "Invalid Token" });
       return;
     }
 
