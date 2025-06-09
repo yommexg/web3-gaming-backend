@@ -33,14 +33,18 @@ export const handleVerifyForgetOTP = async (
 
     if (otpRecord.expiresAt < new Date()) {
       await VerificationOTP.deleteOne({ _id: otpRecord._id }); // Clean up
-      res.status(410).json({ success: false, message: "OTP expired" });
+      res
+        .status(410)
+        .json({ success: false, message: "Invalid or expired OTP" });
       return;
     }
 
     const isMatch = await bcrypt.compare(otp, otpRecord?.otp);
 
     if (!isMatch) {
-      res.status(403).json({ success: false, message: "Invalid OTP" });
+      res
+        .status(403)
+        .json({ success: false, message: "Invalid or expired OTP" });
       return;
     }
 
@@ -48,13 +52,11 @@ export const handleVerifyForgetOTP = async (
     otpRecord.otp = "";
     await otpRecord.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "OTP verified successfully",
-        data: email,
-      });
+    res.status(200).json({
+      success: true,
+      message: "OTP verified successfully",
+      email,
+    });
   } catch (error) {
     console.error(error);
     res

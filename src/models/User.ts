@@ -8,6 +8,7 @@ export interface IUser extends Document {
   updatedAt: Date;
   failedLoginAttempts?: number;
   lockUntil?: Date | null;
+  refreshTokens: [string];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -40,6 +41,11 @@ const UserSchema = new Schema<IUser>(
     lockUntil: {
       type: Date,
       default: null,
+    },
+
+    refreshTokens: {
+      type: [String],
+      default: [],
     },
   },
   {

@@ -9,7 +9,8 @@ import {
   handleLoginUser,
   handleVerifyNewDeviceAndLogin,
 } from "../controllers/auth/login";
-import { handleRefreshToken } from "../controllers/auth/refreshToken";
+import { handleRefreshToken } from "../controllers/auth/refresh-token";
+import { handleLogout } from "../controllers/auth/logout";
 
 const authRouter = express.Router();
 
@@ -27,5 +28,6 @@ authRouter.post("/reset-password", handleResetPassword);
 authRouter.post("/login", handleLoginUser);
 authRouter.post("/verify-and-login", handleVerifyNewDeviceAndLogin);
 authRouter.get("/refresh", handleRefreshToken);
+authRouter.get("/logout", handleLogout);
 
 export default authRouter;

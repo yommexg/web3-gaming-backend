@@ -25,14 +25,18 @@ export const handleVerifyEmailToken = async (
     }
 
     if (record.expiresAt < new Date()) {
-      await VerificationToken.deleteOne({ _id: record._id }); // Clean up
-      res.status(410).json({ success: false, message: "Token expired" });
+      await VerificationToken.deleteOne({ _id: record._id });
+      res
+        .status(410)
+        .json({ success: false, message: "Invalid or expired token" });
       return;
     }
 
     const isMatch = await bcrypt.compare(token, record.token);
     if (!isMatch) {
-      res.status(403).json({ success: false, message: "Invalid token" });
+      res
+        .status(403)
+        .json({ success: false, message: "Invalid or expired token" });
       return;
     }
 
@@ -48,13 +52,11 @@ export const handleVerifyEmailToken = async (
     record.isVerified = true;
     await record.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Email verified successfully",
-        data: record.email,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      email: record.email,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Server error" });

@@ -23,12 +23,12 @@ export const generateVerificationToken = async (email: string) => {
 
 export const generateAccessToken = (userId: string) => {
   return jwt.sign({ userId }, JWT_SECRET, {
-    expiresIn: "1m",
+    expiresIn: "20m",
   });
 };
 
 export const generateRefreshToken = (userId: string) => {
   return jwt.sign({ userId }, JWT_SECRET, {
-    expiresIn: "3m",
+    expiresIn: "1d",
   });
 };

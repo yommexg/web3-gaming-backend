@@ -107,13 +107,16 @@ export const handleLoginUser = async (
       return;
     }
 
-    const accessToken = generateAccessToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    user.refreshTokens.push(refreshToken);
+    await user.save();
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
       sameSite: "strict",
     });
 
@@ -175,17 +178,19 @@ export const handleVerifyNewDeviceAndLogin = async (
     // Log device
     await LoginLog.create({ user: user._id, ip, userAgent });
 
-    const accessToken = generateAccessToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    user.refreshTokens.push(refreshToken);
+    await user.save();
 
     await sendNewDeviceNotification(user.email, ip, userAgent);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      // secure: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: "none",
     });
 
     res.status(200).json({
