@@ -19,11 +19,10 @@ export const handleGetUserDetails = async (
     const userData = {
       id: user._id,
       email: user.email,
-      avatar: user.avatar,
-      name: user.name,
+      username: user.username,
     };
 
-    res.status(200).json({ success: true, data: userData });
+    res.status(200).json({ success: true, user: userData });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error" });
   }
