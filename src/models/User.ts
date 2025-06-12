@@ -9,6 +9,12 @@ export interface IUser extends Document {
   failedLoginAttempts?: number;
   lockUntil?: Date | null;
   refreshTokens: [string];
+  bio?: string | null;
+  twitterUrl?: string | null;
+  discordUrl?: string | null;
+  websiteUrl?: string | null;
+  avatarUrl?: string | null;
+  bannerUrl?: string | null;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -46,6 +52,36 @@ const UserSchema = new Schema<IUser>(
     refreshTokens: {
       type: [String],
       default: [],
+    },
+
+    bio: {
+      type: String,
+      default: null,
+    },
+
+    twitterUrl: {
+      type: String,
+      default: null,
+    },
+
+    discordUrl: {
+      type: String,
+      default: null,
+    },
+
+    websiteUrl: {
+      type: String,
+      default: null,
+    },
+
+    avatarUrl: {
+      type: String,
+      default: null,
+    },
+
+    bannerUrl: {
+      type: String,
+      default: null,
     },
   },
   {
