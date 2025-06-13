@@ -7,11 +7,14 @@ import cors from "cors";
 import { PORT } from "./config/env";
 import connectDB from "./config/dbConnect";
 import corsOptions from "./config/corsOption";
+
 import authRouter from "./routes/auth";
+import userRouter from "./routes/user";
+
 import { errorEvent, logEvent } from "./middlewares/events";
 import { captureRequestMetadata } from "./middlewares/requestMetadata";
 import verifyAuthToken from "./middlewares/verifyAuth";
-import userRouter from "./routes/user";
+import multerError from "./middlewares/multerError";
 
 const app = express();
 
@@ -38,6 +41,7 @@ app.use("/api/v2/auth", authRouter);
 app.use(verifyAuthToken);
 app.use("/api/v2/user", userRouter);
 
+app.use(multerError);
 app.use(errorEvent);
 
 mongoose.connection.once("open", () => {

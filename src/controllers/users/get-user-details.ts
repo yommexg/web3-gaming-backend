@@ -20,6 +20,8 @@ export const handleGetUserDetails = async (
       id: user._id,
       email: user.email,
       username: user.username,
+      avatarUrl: user.avatarUrl,
+      bannerUrl: user.bannerUrl,
     };
 
     res.status(200).json({ success: true, user: userData });
