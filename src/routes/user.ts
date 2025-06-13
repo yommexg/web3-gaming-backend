@@ -4,10 +4,12 @@ import { createUpload } from "../config/multer";
 
 import { handleGetUserDetails } from "../controllers/users/get-user-details";
 import { handleUpdateUserImages } from "../controllers/users/update-user-images";
+import { handleUpdateUserInfo } from "../controllers/users/update-user-info";
 
 const userRouter = express.Router();
 
 userRouter.get("/me", handleGetUserDetails);
+
 userRouter.post(
   "/upload-user-images",
   createUpload({ maxFiles: 2, maxFileSize: 10 * 1024 * 1024 }).fields([
@@ -16,5 +18,7 @@ userRouter.post(
   ]),
   handleUpdateUserImages
 );
+
+userRouter.patch("/update-info", handleUpdateUserInfo);
 
 export default userRouter;

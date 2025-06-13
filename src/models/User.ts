@@ -10,7 +10,7 @@ export interface IUser extends Document {
   lockUntil?: Date | null;
   refreshTokens: [string];
   bio?: string | null;
-  twitterUrl?: string | null;
+  XUrl?: string | null;
   discordUrl?: string | null;
   websiteUrl?: string | null;
   avatarUrl?: string | null;
@@ -59,7 +59,7 @@ const UserSchema = new Schema<IUser>(
       default: null,
     },
 
-    twitterUrl: {
+    XUrl: {
       type: String,
       default: null,
     },
