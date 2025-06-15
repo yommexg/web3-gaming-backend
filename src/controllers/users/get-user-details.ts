@@ -17,11 +17,14 @@ export const handleGetUserDetails = async (
     }
 
     const userData = {
-      id: user._id,
       email: user.email,
       username: user.username,
       avatarUrl: user.avatarUrl,
       bannerUrl: user.bannerUrl,
+      bio: user.bio,
+      XUrl: user.XUrl,
+      discordUrl: user.discordUrl,
+      websiteUrl: user.websiteUrl,
     };
 
     res.status(200).json({ success: true, user: userData });

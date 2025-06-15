@@ -61,7 +61,7 @@ export const handleUpdateUserImages = async (
       message: "Image updated successfully",
     });
   } catch (error) {
-    console.error("Error in handleUpdateAvatar:", error);
+    console.error("Error in Uploding User Images:", error);
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };

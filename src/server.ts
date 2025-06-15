@@ -10,6 +10,7 @@ import corsOptions from "./config/corsOption";
 
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
+import gameRouter from "./routes/game";
 
 import { errorEvent, logEvent } from "./middlewares/events";
 import { captureRequestMetadata } from "./middlewares/requestMetadata";
@@ -33,13 +34,14 @@ app.use(captureRequestMetadata);
 app.use(logEvent);
 
 app.get("/api/v2", (_req, res) => {
-  res.send("Welcome to Pocker APIs' Collection");
+  res.send("Welcome to Pocker APIs' Collection V2");
 });
 
 app.use("/api/v2/auth", authRouter);
 
 app.use(verifyAuthToken);
 app.use("/api/v2/user", userRouter);
+app.use("/api/v2/game", gameRouter);
 
 app.use(multerError);
 app.use(errorEvent);
