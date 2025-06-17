@@ -19,7 +19,7 @@ export const handleGetAllGames = async (
 
     const gamesData = games.map((game) => ({
       id: game._id,
-      name: game.name,
+      title: game.title,
       type: game.type,
       image: game.image,
       status: game.status,

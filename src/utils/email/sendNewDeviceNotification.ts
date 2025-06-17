@@ -6,7 +6,7 @@ export const sendNewDeviceNotification = async (
   userAgent: string
 ) => {
   await transporter.sendMail({
-    from: '"Crypto Oasis Security" <no-reply@lumina.com>',
+    from: '" Yommex Genesis Security" <no-reply@yommexg.com>',
     to: email,
     subject: "🔐 New Login Detected on Your Account",
     html: `
@@ -62,10 +62,10 @@ export const sendNewDeviceNotification = async (
         </head>
         <body>
           <div class="container">
-            <img src="cid:icon" alt="Crypto Oasis Logo" class="logo" width="100" />
+            <img src="cid:icon" alt=" Yommex Genesis Logo" class="logo" width="100" />
             <h2>New Login Detected</h2>
             <p class="details">
-              We've detected a new login to your <strong>Crypto Oasis</strong> account:
+              We've detected a new login to your <strong> Yommex Genesis</strong> account:
             </p>
             <ul class="details">
               <li><strong>IP Address:</strong> ${ip}</li>
@@ -81,8 +81,8 @@ export const sendNewDeviceNotification = async (
               }/reset-password">Reset Password</a>
             </div>
             <div class="footer">
-              — The Crypto Oasis Security Team<br />
-              &copy; ${new Date().getFullYear()} Crypto Oasis
+              — The  Yommex Genesis Security Team<br />
+              &copy; ${new Date().getFullYear()}  Yommex Genesis
             </div>
           </div>
         </body>

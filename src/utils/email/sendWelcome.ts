@@ -7,9 +7,9 @@ export const sendWelcomeEmail = async (email: string, username: string) => {
   }
 
   await transporter.sendMail({
-    from: '"Crypto Oasis" <no-reply@lumina.com>',
+    from: '" Yommex Genesis" <no-reply@yommexg.com>',
     to: email,
-    subject: `Welcome to Crypto Oasis, ${username}!`,
+    subject: `Welcome to  Yommex Genesis, ${username}!`,
     html: `
     <html>
       <head>
@@ -64,10 +64,10 @@ export const sendWelcomeEmail = async (email: string, username: string) => {
       </head>
       <body>
         <div class="container">
-          <img src="cid:icon" alt="Crypto Oasis Logo" class="logo" width="120" />
+          <img src="cid:icon" alt=" Yommex Genesis Logo" class="logo" width="120" />
           <h1>Welcome, ${username}!</h1>
           <p>You've successfully verified and registered your account. 🎉</p>
-          <p>Welcome to <strong>Crypto Oasis</strong> — where the multigaming NFT universe comes alive!</p>
+          <p>Welcome to <strong> Yommex Genesis</strong> — where the multigaming NFT universe comes alive!</p>
           <p>Explore exciting games, compete in tournaments, and connect with vibrant NFT communities.</p>
           <p>
             <a href="${FRONTEND_URL}" class="cta-button">Start Exploring</a>
@@ -75,8 +75,8 @@ export const sendWelcomeEmail = async (email: string, username: string) => {
           <p>We're thrilled to have you with us!</p>
 
           <div class="footer">
-            — The Crypto Oasis Team<br />
-            &copy; ${new Date().getFullYear()} Crypto Oasis
+            — The  Yommex Genesis Team<br />
+            &copy; ${new Date().getFullYear()}  Yommex Genesis
           </div>
         </div>
       </body>

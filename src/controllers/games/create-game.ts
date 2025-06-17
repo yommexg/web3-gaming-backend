@@ -18,25 +18,25 @@ export const handleCreateGame = async (
       return;
     }
 
-    const { name, maxNumOfPlayers, privacy, spectatorMode, type, startDate } =
+    const { title, maxNumOfPlayers, privacy, spectatorMode, type, startDate } =
       req.body;
 
     const file = req.file;
 
-    if (!name || !maxNumOfPlayers || !type || !file) {
+    if (!title || !maxNumOfPlayers || !type || !file) {
       res
         .status(400)
         .json({ success: false, message: "Missing or invalid game data." });
       return;
     }
 
-    const existingGame = await Game.findOne({ name });
+    const existingGame = await Game.findOne({ title });
 
     if (existingGame) {
       res.status(400).json({
         success: false,
         message:
-          "A game with this name already exists. Please choose a different name.",
+          "A game with this title already exists. Please choose a different title.",
       });
       return;
     }
@@ -45,7 +45,7 @@ export const handleCreateGame = async (
       ![
         "pocker",
         "bingo",
-        "avatar",
+        "agar",
         "game 04",
         "game 05",
         "game 06",
@@ -99,15 +99,15 @@ export const handleCreateGame = async (
       resolvedStatus = "hosting";
     }
 
-    const image = await uploadGameImage(file, name);
+    const image = await uploadGameImage(file, title);
 
     await Game.create({
-      name,
+      title,
       image,
       creator: userId,
       players: [userId],
       maxNumOfPlayers,
-      privacy: privacy || "public",
+      privacy: privacy.toLowerCase() || "public",
       spectatorMode: spectatorMode ?? false,
       type,
       status: resolvedStatus,

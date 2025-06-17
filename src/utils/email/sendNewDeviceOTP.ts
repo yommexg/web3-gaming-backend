@@ -7,12 +7,12 @@ export const sendNewDeviceOTP = async (
   userAgent: string
 ) => {
   await transporter.sendMail({
-    from: '"Crypto Oasis Security" <no-reply@lumina.com>',
+    from: '" Yommex Genesis Security" <no-reply@yommexg.com>',
     to: email,
     subject: "Verify New Device with OTP",
     html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
-          <img src="cid:icon" alt="Crypto Oasis Logo" style="width: 100px; display: block; margin: auto;" />
+          <img src="cid:icon" alt=" Yommex Genesis Logo" style="width: 100px; display: block; margin: auto;" />
           <h2 style="text-align: center; color: #30B943;">New Device Login Verification</h2>
           <p>We've detected a login attempt from a new device or IP:</p>
           <ul>
@@ -24,7 +24,7 @@ export const sendNewDeviceOTP = async (
             ${otp}
           </div>
           <p>This OTP is valid for 5 minutes. If this wasn't you, please change your password immediately.</p>
-          <p style="text-align: center; color: #999;">— The Crypto Oasis Team</p>
+          <p style="text-align: center; color: #999;">— The  Yommex Genesis Team</p>
         </div>
       `,
     attachments: [

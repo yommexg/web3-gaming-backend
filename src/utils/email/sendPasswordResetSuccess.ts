@@ -9,7 +9,7 @@ export const sendPasswordResetSuccessEmail = async (
   }
 
   await transporter.sendMail({
-    from: '"Crypto Oasis" <no-reply@lumina.com>',
+    from: '" Yommex Genesis" <no-reply@yommexg.com>',
     to: email,
     subject: `Hi ${username}, Your Password Has Been Successfully Reset`,
     html: `
@@ -62,10 +62,10 @@ export const sendPasswordResetSuccessEmail = async (
       </head>
       <body>
         <div class="container">
-          <img src="cid:icon" alt="Crypto Oasis Logo" class="logo" width="120" />
+          <img src="cid:icon" alt=" Yommex Genesis Logo" class="logo" width="120" />
           <h1>Password Reset Successful</h1>
           <p>Hello <strong>${username}</strong>,</p>
-          <p>Your <strong>Crypto Oasis</strong> account password has been successfully reset.</p>
+          <p>Your <strong> Yommex Genesis</strong> account password has been successfully reset.</p>
           <p>If this was you, there's nothing more to do.</p>
           <p>If you did not request this change, please contact our support team immediately.</p>
 
@@ -74,8 +74,8 @@ export const sendPasswordResetSuccessEmail = async (
           </div>
 
           <div class="footer">
-            — The Crypto Oasis Team<br />
-            &copy; ${new Date().getFullYear()} Crypto Oasis
+            — The  Yommex Genesis Team<br />
+            &copy; ${new Date().getFullYear()}  Yommex Genesis
           </div>
         </div>
       </body>

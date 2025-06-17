@@ -33,15 +33,15 @@ app.use(captureRequestMetadata);
 
 app.use(logEvent);
 
-app.get("/api/v2", (_req, res) => {
-  res.send("Welcome to Pocker APIs' Collection V2");
+app.get("/api/v1", (_req, res) => {
+  res.send("Welcome to Yommex Genesis Pocker APIs' Collection Version 1");
 });
 
-app.use("/api/v2/auth", authRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.use(verifyAuthToken);
-app.use("/api/v2/user", userRouter);
-app.use("/api/v2/game", gameRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/game", gameRouter);
 
 app.use(multerError);
 app.use(errorEvent);

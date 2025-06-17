@@ -9,9 +9,9 @@ export const sendForgotPasswordOTPEmail = async (
   }
 
   await transporter.sendMail({
-    from: '"Crypto Oasis" <no-reply@lumina.com>',
+    from: '" Yommex Genesis" <no-reply@yommexg.com>',
     to: email,
-    subject: "Reset Your Crypto Oasis Password",
+    subject: "Reset Your  Yommex Genesis Password",
     html: `
     <html>
       <head>
@@ -70,9 +70,9 @@ export const sendForgotPasswordOTPEmail = async (
       </head>
       <body>
         <div class="container">
-          <img src="cid:icon" alt="Crypto Oasis Logo" class="logo" width="120" />
+          <img src="cid:icon" alt=" Yommex Genesis Logo" class="logo" width="120" />
           <h1>Password Reset Request</h1>
-          <p>We received a request to reset the password for your <strong>Crypto Oasis</strong> account.</p>
+          <p>We received a request to reset the password for your <strong> Yommex Genesis</strong> account.</p>
           <p>Use the following OTP to reset your password. This code will expire in <strong>5 minutes</strong>:</p>
           <div class="otp">${otp}</div>
           <p>If you did not request a password reset, please ignore this email or contact our support team.</p>
@@ -82,8 +82,8 @@ export const sendForgotPasswordOTPEmail = async (
           </div>
 
           <div class="footer">
-            — The Crypto Oasis Team<br />
-            &copy; ${new Date().getFullYear()} Crypto Oasis
+            — The  Yommex Genesis Team<br />
+            &copy; ${new Date().getFullYear()}  Yommex Genesis
           </div>
         </div>
       </body>

@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface IGame extends Document {
-  name: string;
+  title: string;
   creator: mongoose.Types.ObjectId;
   players: mongoose.Types.ObjectId[];
   winner: mongoose.Types.ObjectId;
@@ -12,7 +12,7 @@ export interface IGame extends Document {
   type:
     | "pocker"
     | "bingo"
-    | "avatar"
+    | "agar"
     | "game 04"
     | "game 05"
     | "game 06"
@@ -34,7 +34,7 @@ interface GameModel extends mongoose.Model<IGame> {
 
 const GameSchema = new Schema<IGame>(
   {
-    name: { type: String, required: true, unique: true },
+    title: { type: String, required: true, unique: true },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -51,7 +51,7 @@ const GameSchema = new Schema<IGame>(
       enum: [
         "pocker",
         "bingo",
-        "avatar",
+        "agar",
         "game 04",
         "game 05",
         "game 06",
