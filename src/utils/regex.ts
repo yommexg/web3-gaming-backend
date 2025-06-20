@@ -9,6 +9,11 @@ export const isEmailValid = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
+export const isUsernameValid = (username: string): boolean => {
+  const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+  return usernameRegex.test(username);
+};
+
 export const getUsernameFromEmail = (email: string): string => {
   return email.split("@")[0];
 };

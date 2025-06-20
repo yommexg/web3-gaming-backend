@@ -2,7 +2,11 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User from "../../models/User";
 import VerificationToken from "../../models/VerificationToken";
-import { isEmailValid, isPasswordValid } from "../../utils/regex";
+import {
+  isEmailValid,
+  isPasswordValid,
+  isUsernameValid,
+} from "../../utils/regex";
 import { sendWelcomeEmail } from "../../utils/email/sendWelcome";
 import { capitalizeFirstLetter } from "../../utils/capitalizeLetter";
 
@@ -24,6 +28,15 @@ export const handleRegisterUser = async (
 
   if (!isEmailValid(email)) {
     res.status(400).json({ success: false, message: "Invalid Email" });
+    return;
+  }
+
+  if (!isUsernameValid(username)) {
+    res.status(400).json({
+      success: false,
+      message:
+        "Invalid username format. Use 3–30 alphanumeric characters or underscores.",
+    });
     return;
   }
 

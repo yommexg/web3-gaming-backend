@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../../models/User";
+import { isUsernameValid } from "../../utils/regex";
 
 export const handleUpdateUserInfo = async (
   req: Request,
@@ -23,13 +24,24 @@ export const handleUpdateUserInfo = async (
       return;
     }
 
-    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
-
-    if (!usernameRegex.test(username)) {
+    if (!isUsernameValid(username)) {
       res.status(400).json({
         success: false,
         message:
           "Invalid username format. Use 3–30 alphanumeric characters or underscores.",
+      });
+      return;
+    }
+
+    const existingWithSameUsername = await User.findOne({
+      username: username.toLowerCase(),
+      _id: { $ne: userId },
+    });
+
+    if (existingWithSameUsername) {
+      res.status(409).json({
+        success: false,
+        message: "Username already taken",
       });
       return;
     }
