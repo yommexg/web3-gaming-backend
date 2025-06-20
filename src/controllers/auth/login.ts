@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 
 import User from "../../models/User";
-import LoginLog from "../../models/LoginLog";
 import { sendNewDeviceNotification } from "../../utils/email/sendNewDeviceNotification";
 import LoginVerificationOTP from "../../models/LoginVerificationOTP";
 import { sendNewDeviceOTP } from "../../utils/email/sendNewDeviceOTP";
@@ -10,6 +9,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../../utils/generateToken";
+import { generateDeviceId } from "../../utils/generateDeviceId";
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_TIME_MINUTES = 15;
@@ -23,15 +23,24 @@ export const handleLoginUser = async (
     return;
   }
 
-  const { email, password } = req.body;
+  const { email, password, fingerprint } = req.body;
 
   //@ts-ignore
   const { ip = "unknown", userAgent = "unknown" } = req.metadata || {};
+  const currentDeviceId = generateDeviceId(fingerprint, userAgent, ip);
 
   if (!email || !password) {
     res.status(400).json({
       success: false,
       message: "Email and password are required",
+    });
+    return;
+  }
+
+  if (!fingerprint) {
+    res.status(400).json({
+      success: false,
+      message: "No fingerprint found",
     });
     return;
   }
@@ -75,17 +84,14 @@ export const handleLoginUser = async (
     user.lockUntil = null;
     await user.save();
 
-    const existingLogin = await LoginLog.findOne({
-      user: user._id,
-      ip,
-      userAgent,
-    });
+    const trusted = user.trustedDevices?.some(
+      (device: any) => device.deviceId === currentDeviceId
+    );
 
-    if (!existingLogin) {
+    if (!trusted) {
       await LoginVerificationOTP.findOneAndDelete({ user: user._id });
 
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
       const hashedOTP = await bcrypt.hash(otp, 10);
 
       await LoginVerificationOTP.create({
@@ -93,6 +99,8 @@ export const handleLoginUser = async (
         otp: hashedOTP,
         ip,
         userAgent,
+        fingerprint,
+        deviceId: currentDeviceId,
         expiresAt: new Date(Date.now() + 5 * 60 * 1000),
       });
 
@@ -106,7 +114,6 @@ export const handleLoginUser = async (
       });
       return;
     }
-
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
@@ -140,10 +147,11 @@ export const handleVerifyNewDeviceAndLogin = async (
     return;
   }
 
-  const { email, otp } = req.body;
+  const { email, otp, fingerprint } = req.body;
 
   //@ts-ignore
   const { ip = "unknown", userAgent = "unknown" } = req.metadata || {};
+  const deviceId = generateDeviceId(fingerprint, userAgent, ip);
 
   try {
     const user = await User.findOne({ email });
@@ -154,8 +162,7 @@ export const handleVerifyNewDeviceAndLogin = async (
 
     const record = await LoginVerificationOTP.findOne({
       user: user._id,
-      ip,
-      userAgent,
+      deviceId,
     });
 
     if (!record || record.expiresAt < new Date()) {
@@ -175,16 +182,22 @@ export const handleVerifyNewDeviceAndLogin = async (
     // Clean up
     await LoginVerificationOTP.deleteOne({ _id: record._id });
 
-    // Log device
-    await LoginLog.create({ user: user._id, ip, userAgent });
-
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
     user.refreshTokens.push(refreshToken);
-    await user.save();
 
     await sendNewDeviceNotification(user.email, ip, userAgent);
+
+    user.trustedDevices.push({
+      deviceId,
+      ip,
+      userAgent,
+      fingerprint,
+      addedAt: new Date(),
+    });
+
+    await user.save();
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,

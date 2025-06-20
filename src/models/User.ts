@@ -1,5 +1,13 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+interface ITrustedDevice {
+  ip: string;
+  deviceId: string;
+  userAgent: string;
+  fingerprint: string;
+  addedAt: Date;
+}
+
 export interface IUser extends Document {
   email: string;
   username: string;
@@ -15,6 +23,7 @@ export interface IUser extends Document {
   websiteUrl?: string | null;
   avatarUrl?: string | null;
   bannerUrl?: string | null;
+  trustedDevices?: ITrustedDevice[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -82,6 +91,18 @@ const UserSchema = new Schema<IUser>(
     bannerUrl: {
       type: String,
       default: null,
+    },
+    trustedDevices: {
+      type: [
+        {
+          ip: { type: String, required: true },
+          deviceId: { type: String, required: true },
+          userAgent: { type: String, required: true },
+          fingerprint: { type: String, required: true },
+          addedAt: { type: Date, default: Date.now },
+        },
+      ],
+      default: [],
     },
   },
   {

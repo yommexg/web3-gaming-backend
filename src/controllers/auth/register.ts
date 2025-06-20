@@ -5,7 +5,6 @@ import VerificationToken from "../../models/VerificationToken";
 import { isEmailValid, isPasswordValid } from "../../utils/regex";
 import { sendWelcomeEmail } from "../../utils/email/sendWelcome";
 import { capitalizeFirstLetter } from "../../utils/capitalizeLetter";
-import LoginLog from "../../models/LoginLog";
 
 export const handleRegisterUser = async (
   req: Request,
@@ -17,9 +16,6 @@ export const handleRegisterUser = async (
   }
 
   const { username, email, password } = req.body;
-
-  //@ts-ignore
-  const { ip = "unknown", userAgent = "unknown" } = req.metadata || {};
 
   if (!username || !email || !password) {
     res.status(400).json({ success: false, message: "Incomplete Details" });
@@ -73,19 +69,15 @@ export const handleRegisterUser = async (
       return;
     }
 
-    // 3. Create the user
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    await User.create({
       email,
       username: username.toLowerCase(),
       password: hashedPassword,
     });
 
     await VerificationToken.deleteOne({ email });
-
-    await LoginLog.create({ user: user._id, ip, userAgent });
-
     await sendWelcomeEmail(email, capitalizeFirstLetter(username));
 
     res
