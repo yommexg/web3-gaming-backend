@@ -41,7 +41,7 @@ app.use("/api/v1/auth", authRouter);
 
 app.use(verifyAuthToken);
 app.use("/api/v1/user", userRouter);
-app.use("/api/v1/game", gameRouter);
+app.use("/api/v1/games", gameRouter);
 
 app.use(multerError);
 app.use(errorEvent);
