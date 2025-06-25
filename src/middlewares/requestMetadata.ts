@@ -1,10 +1,11 @@
 import { format } from "date-fns";
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 
 import { UAParser } from "ua-parser-js";
+import { MetadataRequest } from "../types/req";
 
 export const captureRequestMetadata = (
-  req: Request,
+  req: MetadataRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -31,7 +32,6 @@ export const captureRequestMetadata = (
   const dateTime = `${format(new Date(), "yyyy-MM-dd\tHH:mm:ss")}`;
   console.log(`${dateTime} \t IP=${ip} \t UA=${normalizedUserAgent}`);
 
-  //@ts-ignore
   req.metadata = {
     ip: simplifyIP(ip),
     userAgent: normalizedUserAgent,

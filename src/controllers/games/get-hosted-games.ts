@@ -1,18 +1,19 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import mongoose from "mongoose";
 import Game from "../../models/Game";
+import { AuthenticatedRequest } from "../../types/req";
 
 export const handleGetHostedGames = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
   try {
-    //@ts-ignore
     const userId = req.user.userId;
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
     const hostedGames = await Game.find({
       creator: userObjectId,
+      status: { $in: ["finished"] },
     })
       .sort({ createdAt: -1 })
       .exec();

@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import User from "../../models/User";
 import { isUsernameValid } from "../../utils/regex";
+import { AuthenticatedRequest } from "../../types/req";
 
 export const handleUpdateUserInfo = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
   try {
-    //@ts-ignore
     const userId = req.user.userId;
 
     if (!req.body) {

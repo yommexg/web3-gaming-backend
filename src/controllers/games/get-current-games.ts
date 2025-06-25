@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import Game from "../../models/Game";
+import { AuthenticatedRequest } from "../../types/req";
 
 export const handleGetCurrentGamesForUser = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
   try {
-    //@ts-ignore
     const userId = req.user.userId;
 
     const games = await Game.find({

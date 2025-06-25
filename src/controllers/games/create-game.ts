@@ -1,14 +1,14 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 
 import Game from "../../models/Game";
 import { uploadGameImage } from "../../utils/aws/game-image";
+import { AuthenticatedRequest } from "../../types/req";
 
 export const handleCreateGame = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
   try {
-    //@ts-ignore
     const userId = req.user.userId;
 
     if (!req.body) {

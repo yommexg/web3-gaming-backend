@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import User from "../../models/User";
 import Game from "../../models/Game";
+import { AuthenticatedRequest } from "../../types/req";
 
 export const handleGetUserDetails = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
   try {
-    //@ts-ignore
     const userId = req.user.userId;
 
     const user = await User.findById(userId).exec();
