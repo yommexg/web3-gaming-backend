@@ -29,6 +29,14 @@ export const handleLoginUser = async (
   const { ip = "unknown", userAgent = "unknown" } = req.metadata || {};
   const currentDeviceId = generateDeviceId(fingerprint, userAgent, ip);
 
+  //   const newDevice = {
+  //   ip,
+  //   deviceId,
+  //   fingerprint,
+  //   userAgent,
+  //   addedAt: new Date(),
+  // };
+
   if (!email || !password) {
     res.status(400).json({
       success: false,
@@ -117,7 +125,10 @@ export const handleLoginUser = async (
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    user.refreshTokens.push(refreshToken);
+    user.refreshTokens.push({
+      token: refreshToken,
+    });
+
     await user.save();
 
     res.cookie("refreshToken", refreshToken, {
@@ -153,6 +164,14 @@ export const handleVerifyNewDeviceAndLogin = async (
   const { ip = "unknown", userAgent = "unknown" } = req.metadata || {};
   const deviceId = generateDeviceId(fingerprint, userAgent, ip);
 
+  const newDevice = {
+    ip,
+    deviceId,
+    fingerprint,
+    userAgent,
+    addedAt: new Date(),
+  };
+
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -185,7 +204,10 @@ export const handleVerifyNewDeviceAndLogin = async (
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    user.refreshTokens.push(refreshToken);
+    user.refreshTokens.push({
+      token: refreshToken,
+      device: newDevice,
+    });
 
     await sendNewDeviceNotification(user.email, ip, userAgent);
 

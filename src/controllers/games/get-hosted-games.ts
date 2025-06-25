@@ -1,13 +1,13 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Game from "../../models/Game";
-import { AuthenticatedRequest } from "../../types/req";
 
 export const handleGetHostedGames = async (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    //@ts-ignore
     const userId = req.user.userId;
     const userObjectId = new mongoose.Types.ObjectId(userId);
 

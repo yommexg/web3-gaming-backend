@@ -35,7 +35,6 @@ export const handleSendVerificationToken = async (
 
     // Generate new token
     const token = await generateVerificationToken(email);
-    console.log(token);
 
     await sendVerificationEmail(email, token);
 

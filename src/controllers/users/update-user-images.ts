@@ -1,13 +1,13 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import User from "../../models/User";
 import { uploadUserImage } from "../../utils/aws/user-image";
-import { AuthenticatedRequest } from "../../types/req";
 
 export const handleUpdateUserImages = async (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    //@ts-ignore
     const userId = req.user.userId;
 
     const files = req.files as {

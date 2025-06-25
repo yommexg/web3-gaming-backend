@@ -30,22 +30,51 @@ export const handleRefreshToken = async (
       return;
     }
 
-    const user = await User.findById(decoded.userId);
-    if (!user || !user.refreshTokens.includes(token)) {
+    // Match by nested token
+    const user = await User.findOne({
+      _id: decoded.userId,
+      "refreshTokens.token": token,
+    });
+
+    if (!user) {
       res.status(403).json({ success: false, message: "Invalid Token" });
       return;
     }
 
-    // Remove old refresh token and add new one (rotation)
-    user.refreshTokens = user.refreshTokens.filter((t: any) => t !== token);
+    const userRefreshTokens = user.refreshTokens || [];
+
+    // Trim to last 5
+    if (userRefreshTokens.length >= 5) {
+      userRefreshTokens.sort((a: any, b: any) => {
+        return (
+          new Date(a.device?.addedAt).getTime() -
+          new Date(b.device?.addedAt).getTime()
+        );
+      });
+      userRefreshTokens.shift();
+    }
+
     const newRefreshToken = generateRefreshToken(user._id);
-    user.refreshTokens.push(newRefreshToken);
+
+    const newDevice = {
+      //@ts-ignore
+      ip: req.metadata?.ip || "unknown",
+      deviceId: req.headers["x-device-id"]?.toString() || "unknown",
+      fingerprint: req.headers["x-fingerprint"]?.toString() || "unknown",
+      //@ts-ignore
+      userAgent: req.metadata?.userAgent || "unknown",
+      addedAt: new Date(),
+    };
+
+    user.refreshTokens.push({
+      token: newRefreshToken,
+      device: newDevice,
+    });
+
     await user.save();
 
-    // Generate new access token
     const newAccessToken = generateAccessToken(user._id);
 
-    // Set new refresh token cookie with longer expiration
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -59,8 +88,9 @@ export const handleRefreshToken = async (
     });
   } catch (err) {
     console.error("Refresh token error:", err);
-    res
-      .status(403)
-      .json({ success: false, message: "Invalid or expired token" });
+    res.status(403).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
   }
 };
