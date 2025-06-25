@@ -102,7 +102,7 @@ export const handleCreateGame = async (
     const image = await uploadGameImage(file, title);
 
     await Game.create({
-      title,
+      title: title.toLowerCase(),
       image,
       creator: userId,
       players: [userId],
