@@ -29,14 +29,6 @@ export const handleLoginUser = async (
   const { ip = "unknown", userAgent = "unknown" } = req.metadata || {};
   const currentDeviceId = generateDeviceId(fingerprint, userAgent, ip);
 
-  //   const newDevice = {
-  //   ip,
-  //   deviceId,
-  //   fingerprint,
-  //   userAgent,
-  //   addedAt: new Date(),
-  // };
-
   if (!email || !password) {
     res.status(400).json({
       success: false,
