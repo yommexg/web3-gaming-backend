@@ -27,7 +27,7 @@ authRouter.post("/reset-password", handleResetPassword);
 //Login
 authRouter.post("/login", handleLoginUser);
 authRouter.post("/verify-and-login", handleVerifyNewDeviceAndLogin);
-authRouter.get("/refresh", handleRefreshToken);
+authRouter.post("/refresh", handleRefreshToken);
 authRouter.get("/logout", handleLogout);
 
 export default authRouter;

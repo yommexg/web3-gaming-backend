@@ -19,8 +19,8 @@ export const handleGetUserDetails = async (
 
     // Fetch game statistics
     const [gamesPlayed, gamesHosted, gamesWon] = await Promise.all([
-      Game.countDocuments({ players: userId }),
-      Game.countDocuments({ creator: userId }),
+      Game.countDocuments({ players: userId, status: "finished" }),
+      Game.countDocuments({ creator: userId, status: "finished" }),
       Game.countDocuments({ winner: userId }),
     ]);
 

@@ -6,6 +6,7 @@ import {
   generateRefreshToken,
 } from "../../utils/generateToken";
 import User from "../../models/User";
+import { generateDeviceId } from "../../utils/generateDeviceId";
 
 interface MyJwtPayload extends JwtPayload {
   userId: string;
@@ -15,7 +16,27 @@ export const handleRefreshToken = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  if (!req.body) {
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+    res.status(400).json({ success: false, message: "No Request Body found" });
+    return;
+  }
+
   const token = req.cookies?.refreshToken;
+  const { fingerprint } = req.body;
+
+  if (!fingerprint) {
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+    res.status(400).json({
+      success: false,
+      message: "No fingerprint found",
+    });
+    return;
+  }
+
+  //@ts-ignore
+  const { ip = "unknown", userAgent = "unknown" } = req.metadata || {};
+  const currentDeviceId = generateDeviceId(fingerprint, userAgent, ip);
 
   if (!token) {
     res.status(401).json({ success: false, message: "Unauthorized" });
@@ -26,55 +47,45 @@ export const handleRefreshToken = async (
     const decoded = jwt.verify(token, JWT_SECRET) as MyJwtPayload;
 
     if (!decoded?.userId) {
+      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
       res.status(403).json({ success: false, message: "Invalid Token" });
       return;
     }
 
-    // Match by nested token
+    // Find user and check if device + token exist
     const user = await User.findOne({
       _id: decoded.userId,
       "refreshTokens.token": token,
+      "refreshTokens.device.deviceId": currentDeviceId,
     });
 
     if (!user) {
-      res.status(403).json({ success: false, message: "Invalid Token" });
+      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+      res
+        .status(403)
+        .json({ success: false, message: "Invalid Token or Device" });
       return;
     }
 
-    const userRefreshTokens = user.refreshTokens || [];
-
-    // Trim to last 5
-    if (userRefreshTokens.length >= 5) {
-      userRefreshTokens.sort((a: any, b: any) => {
-        return (
-          new Date(a.device?.addedAt).getTime() -
-          new Date(b.device?.addedAt).getTime()
-        );
-      });
-      userRefreshTokens.shift();
-    }
-
     const newRefreshToken = generateRefreshToken(user._id);
-
-    const newDevice = {
-      //@ts-ignore
-      ip: req.metadata?.ip || "unknown",
-      deviceId: req.headers["x-device-id"]?.toString() || "unknown",
-      fingerprint: req.headers["x-fingerprint"]?.toString() || "unknown",
-      //@ts-ignore
-      userAgent: req.metadata?.userAgent || "unknown",
-      addedAt: new Date(),
-    };
-
-    user.refreshTokens.push({
-      token: newRefreshToken,
-      device: newDevice,
-    });
-
-    await user.save();
-
     const newAccessToken = generateAccessToken(user._id);
 
+    // Update the refresh token for the specific device in-place
+    await User.findOneAndUpdate(
+      {
+        _id: decoded.userId,
+        "refreshTokens.device.deviceId": currentDeviceId,
+        "refreshTokens.token": token,
+      },
+      {
+        $set: {
+          "refreshTokens.$.token": newRefreshToken,
+        },
+      },
+      { new: true }
+    );
+
+    // Send updated tokens
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -88,6 +99,7 @@ export const handleRefreshToken = async (
     });
   } catch (err) {
     console.error("Refresh token error:", err);
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
     res.status(403).json({
       success: false,
       message: "Invalid or expired token",

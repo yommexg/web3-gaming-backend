@@ -84,7 +84,7 @@ export const handleLoginUser = async (
     user.lockUntil = null;
     await user.save();
 
-    const trusted = user.trustedDevices?.some(
+    const trusted = user.trustedDevices?.find(
       (device: any) => device.deviceId === currentDeviceId
     );
 
@@ -114,13 +114,22 @@ export const handleLoginUser = async (
       });
       return;
     }
+
+    const existingTokenEntry = user.refreshTokens.find((entry: any) => {
+      return entry.device?.deviceId === currentDeviceId;
+    });
+
+    if (!existingTokenEntry) {
+      res
+        .status(401)
+        .json({ success: false, message: "Device Not Registered" });
+      return;
+    }
+
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    user.refreshTokens.push({
-      token: refreshToken,
-    });
-
+    existingTokenEntry.token = refreshToken;
     await user.save();
 
     res.cookie("refreshToken", refreshToken, {
