@@ -23,7 +23,7 @@ export const generateVerificationToken = async (email: string) => {
 
 export const generateAccessToken = (userId: string) => {
   return jwt.sign({ userId }, JWT_SECRET, {
-    expiresIn: "10s",
+    expiresIn: "10m",
   });
 };
 
