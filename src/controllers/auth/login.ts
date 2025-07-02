@@ -108,7 +108,6 @@ export const handleLoginUser = async (
 
       res.status(202).json({
         success: false,
-        otpRequired: true,
         message:
           "New device detected. Please verify the OTP sent to your email.",
       });

@@ -16,7 +16,7 @@ gameRouter.get("/played", handleGetPlayedGames);
 
 gameRouter.post(
   "/create",
-  createUpload({ maxFiles: 2, maxFileSize: 5 * 1024 * 1024 }).single("game"),
+  createUpload({ maxFiles: 1, maxFileSize: 5 * 1024 * 1024 }).single("game"),
   handleCreateGame
 );
 
