@@ -149,7 +149,7 @@ export const handleLoginUser = async (
   }
 };
 
-export const handleVerifyNewDeviceAndLogin = async (
+export const handleVerifyAndLogin = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -204,12 +204,20 @@ export const handleVerifyNewDeviceAndLogin = async (
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
+    if (user.refreshTokens.length >= 3) {
+      user.refreshTokens.shift();
+    }
+
     user.refreshTokens.push({
       token: refreshToken,
       device: newDevice,
     });
 
     await sendNewDeviceNotification(user.email, ip, userAgent);
+
+    if (user.trustedDevices.length >= 3) {
+      user.trustedDevices.shift();
+    }
 
     user.trustedDevices.push({
       deviceId,

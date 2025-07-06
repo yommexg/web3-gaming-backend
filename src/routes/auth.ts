@@ -7,7 +7,7 @@ import { handleVerifyForgetOTP } from "../controllers/auth/verify-forget-otp";
 import { handleResetPassword } from "../controllers/auth/reset-password";
 import {
   handleLoginUser,
-  handleVerifyNewDeviceAndLogin,
+  handleVerifyAndLogin,
 } from "../controllers/auth/login";
 import { handleRefreshToken } from "../controllers/auth/refresh-token";
 import { handleLogout } from "../controllers/auth/logout";
@@ -26,7 +26,7 @@ authRouter.post("/reset-password", handleResetPassword);
 
 //Login
 authRouter.post("/login", handleLoginUser);
-authRouter.post("/verify-and-login", handleVerifyNewDeviceAndLogin);
+authRouter.post("/verify-and-login", handleVerifyAndLogin);
 authRouter.post("/refresh", handleRefreshToken);
 authRouter.get("/logout", handleLogout);
 
