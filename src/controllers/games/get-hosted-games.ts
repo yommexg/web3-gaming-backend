@@ -13,7 +13,7 @@ export const handleGetHostedGames = async (
 
     const hostedGames = await Game.find({
       creator: userObjectId,
-      // status: { $in: ["finished"] },
+      status: { $in: ["finished"] },
     })
       .sort({ createdAt: -1 })
       .exec();

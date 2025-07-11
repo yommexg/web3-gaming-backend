@@ -54,7 +54,7 @@ export const handleLogout = async (
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "strict",
     });
 
