@@ -55,7 +55,7 @@ export const handleLogout = async (
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
     });
 
     res.status(200).json({ success: true, message: "Logged out from device" });
@@ -63,7 +63,7 @@ export const handleLogout = async (
     console.error("Logout Error:", err);
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
     });
     res.status(204).end(); // Graceful fallback
   }

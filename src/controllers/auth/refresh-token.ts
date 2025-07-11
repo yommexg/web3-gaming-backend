@@ -17,7 +17,7 @@ export const handleRefreshToken = async (
   res: Response
 ): Promise<void> => {
   if (!req.body) {
-    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "none" });
     res.status(400).json({ success: false, message: "No Request Body found" });
     return;
   }
@@ -26,7 +26,7 @@ export const handleRefreshToken = async (
   const { fingerprint } = req.body;
 
   if (!fingerprint) {
-    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "none" });
     res.status(400).json({
       success: false,
       message: "No fingerprint found",
@@ -47,7 +47,7 @@ export const handleRefreshToken = async (
     const decoded = jwt.verify(token, JWT_SECRET) as MyJwtPayload;
 
     if (!decoded?.userId) {
-      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "none" });
       res.status(403).json({ success: false, message: "Invalid Token" });
       return;
     }
@@ -60,7 +60,7 @@ export const handleRefreshToken = async (
     });
 
     if (!user) {
-      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+      res.clearCookie("refreshToken", { httpOnly: true, sameSite: "none" });
       res
         .status(403)
         .json({ success: false, message: "Invalid Token or Device" });
@@ -82,7 +82,7 @@ export const handleRefreshToken = async (
       httpOnly: true,
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "lax",
+      sameSite: "none",
     });
 
     res.json({
@@ -91,7 +91,7 @@ export const handleRefreshToken = async (
     });
   } catch (err) {
     console.error("Refresh token error:", err);
-    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "none" });
     res.status(403).json({
       success: false,
       message: "Invalid or expired token",
