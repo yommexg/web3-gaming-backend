@@ -146,7 +146,7 @@ export const handleLoginUser = async (
       httpOnly: true,
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "strict",
+      sameSite: "lax",
     });
 
     res.status(200).json({
@@ -244,7 +244,7 @@ export const handleVerifyAndLogin = async (
       httpOnly: true,
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "strict",
+      sameSite: "lax",
     });
 
     res.status(200).json({
