@@ -67,23 +67,15 @@ export const handleRefreshToken = async (
       return;
     }
 
+    const existingDeviceRefreshToken = user.refreshTokens.find((entry: any) => {
+      return entry.device.deviceId === currentDeviceId;
+    });
+
     const newRefreshToken = generateRefreshToken(user._id);
     const newAccessToken = generateAccessToken(user._id);
 
-    // Update the refresh token for the specific device in-place
-    await User.findOneAndUpdate(
-      {
-        _id: decoded.userId,
-        "refreshTokens.device.deviceId": currentDeviceId,
-        "refreshTokens.token": token,
-      },
-      {
-        $set: {
-          "refreshTokens.$.token": newRefreshToken,
-        },
-      },
-      { new: true }
-    );
+    existingDeviceRefreshToken.token = newRefreshToken;
+    await user.save();
 
     // Send updated tokens
     res.cookie("refreshToken", newRefreshToken, {

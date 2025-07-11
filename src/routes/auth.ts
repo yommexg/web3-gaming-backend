@@ -28,6 +28,6 @@ authRouter.post("/reset-password", handleResetPassword);
 authRouter.post("/login", handleLoginUser);
 authRouter.post("/verify-and-login", handleVerifyAndLogin);
 authRouter.post("/refresh", handleRefreshToken);
-authRouter.get("/logout", handleLogout);
+authRouter.post("/logout", handleLogout);
 
 export default authRouter;

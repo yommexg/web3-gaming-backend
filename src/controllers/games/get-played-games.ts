@@ -11,7 +11,7 @@ export const handleGetPlayedGames = async (
 
     const playedGames = await Game.find({
       players: userId,
-      status: { $in: ["finished"] },
+      // status: { $in: ["finished"] },
     })
       .populate("creator", "username")
       .populate("winner", "username")
