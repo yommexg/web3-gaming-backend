@@ -21,6 +21,8 @@ export interface IGame extends Document {
     | "game 09"
     | "game 10";
   status: "open" | "hosting" | "finished";
+  rounds: [];
+  currentRound: {};
   startDate: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -66,6 +68,24 @@ const GameSchema = new Schema<IGame>(
       type: String,
       enum: ["open", "hosting", "finished"],
       default: "open",
+    },
+    rounds: [
+      {
+        number: Number,
+        status: {
+          type: String,
+          enum: ["active", "finished"],
+          default: "active",
+        },
+        startedAt: Date,
+        endedAt: Date,
+      },
+    ],
+    currentRound: {
+      number: Number,
+      status: { type: String, enum: ["active", "finished"] },
+      startedAt: Date,
+      endedAt: Date,
     },
     startDate: { type: Date },
   },
@@ -115,6 +135,28 @@ GameSchema.statics.getPublicGamesByType = function (
   type: IGame["type"]
 ) {
   return this.find({ type, privacy: "public" }).sort({ createdAt: -1 }).exec();
+};
+
+GameSchema.methods.canStartNewRound = function (): boolean {
+  if (!this.currentRound) return true;
+  return this.currentRound.status === "finished";
+};
+
+GameSchema.methods.startNewRound = function (): void {
+  if (!this.canStartNewRound()) {
+    throw new Error("Cannot start new round until current one is finished.");
+  }
+
+  const newRoundNumber = this.rounds.length + 1;
+
+  const newRound = {
+    number: newRoundNumber,
+    status: "active",
+    startedAt: new Date(),
+  };
+
+  this.rounds.push(newRound);
+  this.currentRound = newRound;
 };
 
 export default mongoose.models.Game ||

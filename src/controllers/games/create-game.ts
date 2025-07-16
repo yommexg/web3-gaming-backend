@@ -105,7 +105,6 @@ export const handleCreateGame = async (
       title: title.toLowerCase(),
       image,
       creator: userId,
-      players: [userId],
       maxNumOfPlayers,
       privacy: privacy.toLowerCase() || "public",
       spectatorMode: spectatorMode ?? false,
